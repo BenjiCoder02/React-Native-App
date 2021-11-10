@@ -10,8 +10,7 @@ import {
 } from 'react-native';
 import { registerRootComponent } from 'expo';
 import { NavigationContainer } from "@react-navigation/native"
-import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import Home from "./Screens/Home";
 import About from "./Screens/About"
 import Give from "./Screens/Give"
@@ -33,39 +32,53 @@ const instructions = Platform.select({
     'Shake or press menu button for dev menu',
 });
 
-const Stack = createNativeStackNavigator();
-const Drawer = createDrawerNavigator();
+const Tab = createBottomTabNavigator();
 
 export default function App({ navigation }) {
   return (
     //<Provider store={store}>
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName="Home" screenOptions={{ headerTintColor: "black", drawerActiveTintColor: '#36B3A8', drawerInactiveTintColor: 'black' }}
-      >
-        <Drawer.Screen name="Home" component={Home} options={{
+      <Tab.Navigator initialRouteName="Home">
 
-          drawerIcon: config => <Entypo
-            size={23}
-            name="home"
+        <Tab.Screen name='Home' component={Home}
+          options={{
+            tabBarActiveTintColor: "black",
+            tabBarIcon: ({ size, focused, color }) => {
+              return (
+                <Entypo name="home" size={size} color={focused === true ? '#3D8991' : 'black'} />
+              )
+            }
+          }} />
+        <Tab.Screen name='About' component={About}
+          options={{
+            tabBarActiveTintColor: "black",
+            tabBarIcon: ({ size, focused, color }) => {
+              return (
+                <Entypo name="info" size={size} color={focused === true ? '#3D8991' : 'black'} />
+              )
+            }
+          }} />
+        <Tab.Screen name='Give' component={Give}
+          options={{
+            tabBarActiveTintColor: "black",
+            tabBarIcon: ({ size, focused, color }) => {
+              return (
+                <FontAwesome5 name="donate" size={size} color={focused === true ? '#3D8991' : 'black'} />
+              )
+            }
+          }} />
+        <Tab.Screen name='Notification' component={NotificationSystem}
+          options={{
+            tabBarActiveTintColor: "black",
+            tabBarIcon: ({ size, focused, color }) => {
+              return (
+                <FontAwesome5 name="donate" size={size} color={focused === true ? '#3D8991' : 'black'} />
+              )
+            }
+          }} />
 
 
-          ></Entypo>,
-          //headerStyle: { backgroundColor: "#4F6D7A", shadowColor: 'transparent' },
-          //headerTitleStyle: { color: 'white' },
-
-
-        }} />
-        <Drawer.Screen name="About" component={About} options={{
-          drawerIcon: config => <Feather name="info" size={24} color="black" />
-        }} />
-        <Drawer.Screen name="Give" component={Give} options={{
-          drawerIcon: config => <FontAwesome5 name="donate" size={24} color="black" />
-        }} />
-        <Drawer.Screen name="Notification" component={NotificationSystem} options={{
-          drawerIcon: config => <FontAwesome5 name="donate" size={24} color="black" />
-        }} />
-
-      </Drawer.Navigator>
+      </Tab.Navigator>
     </NavigationContainer>
     //</Provider>
   );
