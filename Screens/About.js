@@ -19,11 +19,9 @@ const About = ({ navigation }) => {
         <Text style={styles.welcome}>
           About Impact Church Toronto
         </Text>
+
         <Text style={styles.instructions}>
-          To get started, edit App.js
-        </Text>
-        <Text style={styles.instructions}>
-          Wassup, hello home, We are a church, that has a lot of fun.
+          Located at 27 Castlefield Avenue...
         </Text>
       </View>
 

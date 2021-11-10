@@ -21,7 +21,7 @@ const Give = ({ navigation }) => {
                 </Text>
 
                 <Text style={styles.instructions}>
-                    Wassup, hello home, We are a church, that has a lot of fun.
+                    To give using PayPal click here.
                 </Text>
             </View>
 

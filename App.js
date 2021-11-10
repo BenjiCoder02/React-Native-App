@@ -15,6 +15,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import Home from "./Screens/Home";
 import About from "./Screens/About"
 import Give from "./Screens/Give"
+
 import { Header } from "react-native-elements"
 import 'react-native-gesture-handler';
 import { Entypo } from '@expo/vector-icons';
@@ -23,7 +24,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 /*import { Provider } from "react-redux"
 import store from "./Store/Store"
 */
-
+import NotificationSystem from './NotificationHandler/Notification';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -39,12 +40,20 @@ export default function App({ navigation }) {
   return (
     //<Provider store={store}>
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName="Home">
+      <Drawer.Navigator initialRouteName="Home" screenOptions={{ headerTintColor: "black", drawerActiveTintColor: '#36B3A8', drawerInactiveTintColor: 'black' }}
+      >
         <Drawer.Screen name="Home" component={Home} options={{
+
           drawerIcon: config => <Entypo
             size={23}
             name="home"
-          ></Entypo>
+
+
+          ></Entypo>,
+          //headerStyle: { backgroundColor: "#4F6D7A", shadowColor: 'transparent' },
+          //headerTitleStyle: { color: 'white' },
+
+
         }} />
         <Drawer.Screen name="About" component={About} options={{
           drawerIcon: config => <Feather name="info" size={24} color="black" />
@@ -52,6 +61,10 @@ export default function App({ navigation }) {
         <Drawer.Screen name="Give" component={Give} options={{
           drawerIcon: config => <FontAwesome5 name="donate" size={24} color="black" />
         }} />
+        <Drawer.Screen name="Notification" component={NotificationSystem} options={{
+          drawerIcon: config => <FontAwesome5 name="donate" size={24} color="black" />
+        }} />
+
       </Drawer.Navigator>
     </NavigationContainer>
     //</Provider>

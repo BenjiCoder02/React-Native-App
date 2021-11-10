@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "impact",
-    "slug": "impact",
+    "name": "Impact Toronto-Dev",
+    "slug": "impact-toronto-dev",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon_t.png",
@@ -10,6 +10,19 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon_t.png",
+          "color": "#ffffff",
+          "sounds": [
+            "./assets/notification_sound.wav"
+          ],
+          "mode": "production"
+        }
+      ]
+    ],
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -27,6 +40,7 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": ""
   }
 }
