@@ -3,7 +3,8 @@ import {
   StyleSheet,
   Text,
   View,
-  StatusBar
+  StatusBar,
+  ImageBackground
 } from 'react-native';
 
 
@@ -16,12 +17,17 @@ const About = ({ navigation }) => {
           backgroundColor="#4F6D7A"
 
         />
-        <Text style={styles.welcome}>
-          About Impact Church Toronto
+        <View style={styles.top}>
+          <ImageBackground style={styles.background} source={require("../assets/image-asset.jpeg")} resizeMode={'cover'}>
+            <Text style={{ textAlign: "center", color: 'white', fontSize: 35, fontWeight: '900' }}>SERVICES</Text>
+          </ImageBackground>
+        </View>
+        <Text style={styles.header}>
+          SUNDAYS
         </Text>
 
         <Text style={styles.instructions}>
-          Located at 27 Castlefield Avenue...
+          Sunday : 10:30AM
         </Text>
       </View>
 
@@ -32,21 +38,28 @@ const About = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-evenly',
+    //justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#4F6D7A',
   },
-  welcome: {
+  header: {
+    color: 'white',
     fontSize: 25,
-    textAlign: 'center',
-    margin: 10,
-    color: '#F5FCFF'
+  },
+  top: {
+
+    height: 100,
+    width: "100%"
+  },
+  background: {
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "center"
   },
   instructions: {
-    textAlign: 'center',
-    color: '#F5FCFF',
-    marginBottom: 5,
-  },
+    color: 'white'
+  }
+
 });
 
 export default About

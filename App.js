@@ -18,12 +18,15 @@ import Give from "./Screens/Give"
 import { Header } from "react-native-elements"
 import 'react-native-gesture-handler';
 import { Entypo } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 /*import { Provider } from "react-redux"
 import store from "./Store/Store"
 */
 import NotificationSystem from './NotificationHandler/Notification';
+import Login from './Screens/Login';
+import Notes from './Screens/Notes';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -38,14 +41,16 @@ export default function App({ navigation }) {
   return (
     //<Provider store={store}>
     <NavigationContainer>
-      <Tab.Navigator initialRouteName="Home">
+      <Tab.Navigator initialRouteName="Home" screenOptions={{
+        tabBarHideOnKeyboard: true
+      }}>
 
         <Tab.Screen name='Home' component={Home}
           options={{
             tabBarActiveTintColor: "black",
             tabBarIcon: ({ size, focused, color }) => {
               return (
-                <Entypo name="home" size={size} color={focused === true ? '#3D8991' : 'black'} />
+                <Entypo name="home" size={size} color={focused === true ? '#3D8991' : 'gray'} />
               )
             }
           }} />
@@ -54,7 +59,7 @@ export default function App({ navigation }) {
             tabBarActiveTintColor: "black",
             tabBarIcon: ({ size, focused, color }) => {
               return (
-                <Entypo name="info" size={size} color={focused === true ? '#3D8991' : 'black'} />
+                <Entypo name="info" size={size} color={focused === true ? '#3D8991' : 'gray'} />
               )
             }
           }} />
@@ -63,20 +68,30 @@ export default function App({ navigation }) {
             tabBarActiveTintColor: "black",
             tabBarIcon: ({ size, focused, color }) => {
               return (
-                <FontAwesome5 name="donate" size={size} color={focused === true ? '#3D8991' : 'black'} />
+                <FontAwesome5 name="donate" size={size} color={focused === true ? '#3D8991' : 'gray'} />
               )
             }
           }} />
-        <Tab.Screen name='Notification' component={NotificationSystem}
+        <Tab.Screen name='Notes' component={Notes}
           options={{
             tabBarActiveTintColor: "black",
+
             tabBarIcon: ({ size, focused, color }) => {
               return (
-                <FontAwesome5 name="donate" size={size} color={focused === true ? '#3D8991' : 'black'} />
+                <FontAwesome name="sticky-note" size={size} color={focused === true ? '#3D8991' : 'gray'} />
               )
             }
           }} />
 
+        <Tab.Screen name="Login" component={Login}
+          options={{
+            tabBarActiveTintColor: "black",
+            tabBarIcon: ({ size, focused, color }) => {
+              return (
+                <Entypo name="login" size={size} color={focused === true ? '#3D8991' : 'gray'} />
+              )
+            }
+          }} />
 
       </Tab.Navigator>
     </NavigationContainer>

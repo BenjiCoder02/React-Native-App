@@ -17,12 +17,8 @@ import {
 import * as Linking from "expo-linking";
 import YoutubePlayer from "react-native-youtube-iframe";
 
-
-
-
-
-
 const Home = ({ navigation }) => {
+  const [src, setVideoSrc] = useState([])
 
   const [playing, setPlaying] = useState(false);
 
@@ -42,45 +38,76 @@ const Home = ({ navigation }) => {
     Linking.openURL("https://www.youtube.com/c/ImpactChurchTO/featured")
   }
 
+  const handleLogin = () => {
+    navigation.navigate("Login")
+  }
+
+  const getSrc = async () => {
+    try {
+      const response = await fetch("https://impact-toronto-react-native.herokuapp.com/home");
+
+      const data = await response.json();
+      return data
+
+
+    }
+    catch (error) {
+      alert(error + "err")
+    }
+  }
+
+  useEffect(() => {
+    getSrc().then((res) => {
+      let arr = res.items;
+      arr.map(ele => {
+        setVideoSrc(prevState => {
+          return [...prevState, ele.contentDetails.videoId]
+        })
+      })
+
+    })
+  }, [])
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.imageView}>
         <Image source={require("../assets/impact_church_logo.png")} style={styles.logo} />
-      </View>
-      {/*------------------------*/}
-      <ScrollView style={{ paddingHorizontal: "10%" }}>
-        <Pressable onPress={handlePress} style={styles.Pressable}>
-          <Image source={require("../assets/love_god_love_people.jpg")} style={styles.image} />
+        <Pressable onPress={handleLogin}>
+          <View style={styles.login}><Text style={{ color: 'white', fontWeight: '700' }}>Login</Text></View>
         </Pressable>
+      </View>
+      <ScrollView style={{ paddingHorizontal: "10%" }}>
+
+        <Image source={require("../assets/love_god_love_people.jpg")} style={styles.image} />
+
         <Pressable onPress={handlePress} style={styles.Pressable}>
           <Image source={require("../assets/Service_Link.png")} style={styles.image} />
         </Pressable>
 
-        {/*----------------------- */}
-        <View style={{ marginVertical: 20 }}>
 
-          <YoutubePlayer height={200} width={'auto'}
-            play={playing}
-            videoId={"xbgjkcAy6r0"}
-            onChangeState={onStateChange}
-          />
-        </View>
+        {src.map((ele, idx) => {
+          return (
+            <View style={{ marginVertical: 20 }} key={idx}>
+              <YoutubePlayer height={200} width={'auto'}
+                play={playing}
+                videoId={ele}
+                onChangeState={onStateChange}
+              />
+            </View>
+          )
 
-        {/*------------------------*/}
+        })}
 
-        {/*------------------------*/}
 
       </ScrollView >
-
-
     </SafeAreaView >
   )
 }
 
 const styles = StyleSheet.create({
   imageView: {
-    justifyContent: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
     height: '10%',
     width: 'auto'
@@ -93,7 +120,7 @@ const styles = StyleSheet.create({
   image: {
     height: 200,
     width: 'auto',
-    resizeMode: "contain",
+    resizeMode: "contain"
   },
   container: {
     backgroundColor: '#4F6D7A',
@@ -114,6 +141,19 @@ const styles = StyleSheet.create({
     marginHorizontal: 0,
     height: 200,
     marginVertical: 20
+  },
+  login: {
+    marginRight: 25,
+    height: 35,
+    width: 75,
+    color: 'white',
+    fontWeight: "500",
+    borderWidth: 5,
+    borderRadius: 20,
+    borderColor: '#3D8991',
+    backgroundColor: '#3D8991',
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 
 });
