@@ -3,12 +3,11 @@ import { SafeAreaView, Text, StyleSheet, Pressable, View, TextInput, TouchableWi
 import * as FileSystem from "expo-file-system";
 import DateGetter from "../NotificationHandler/Date";
 
-function Notes() {
+function Notes({ navigation }) {
     const fileURI = FileSystem.documentDirectory;
     const [title, setTitle] = useState("Impact Toronto Sermon")
     const [textContent, setTextContent] = useState("")
     const date = DateGetter();
-
 
     useEffect(() => {
         setTitle(() => {
@@ -25,8 +24,6 @@ function Notes() {
         let finalTitle = convertTitle();
         const newFileDir = `${fileURI}Notes/${finalTitle}.txt`
         FileSystem.writeAsStringAsync(newFileDir, textContent);
-
-
     }
 
     //Checks for the Notes directory and then creates the dir if it does not exist
@@ -64,6 +61,11 @@ function Notes() {
                 <Pressable style={{ width: 250 }} onPress={writeNewNote}>
                     <View style={styles.createBtn}>
                         <Text style={styles.makeNote}>Make Note</Text>
+                    </View>
+                </Pressable>
+                <Pressable style={{ width: 250 }} onPress={() => { navigation.navigate("AllNotes") }}>
+                    <View style={styles.viewAllNotes}>
+                        <Text style={styles.makeNote}>All Notes</Text>
                     </View>
                 </Pressable>
 
@@ -105,7 +107,6 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         padding: 10,
         textAlignVertical: "top"
-
     },
     createArea: {
         width: "80%",
@@ -119,6 +120,13 @@ const styles = StyleSheet.create({
     },
     createBtn: {
         backgroundColor: "#fcba03",
+        height: 40,
+        width: '100%',
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    viewAllNotes: {
+        backgroundColor: "#3D8991",
         height: 40,
         width: '100%',
         alignItems: "center",

@@ -11,6 +11,8 @@ import {
 import { registerRootComponent } from 'expo';
 import { NavigationContainer } from "@react-navigation/native"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
+import { createNativeStackNavigator } from "@react-navigation/native-stack"
+
 import Home from "./Screens/Home";
 import About from "./Screens/About"
 import Give from "./Screens/Give"
@@ -21,25 +23,30 @@ import { Entypo } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
-/*import { Provider } from "react-redux"
-import store from "./Store/Store"
-*/
+
 import NotificationSystem from './NotificationHandler/Notification';
 import Login from './Screens/Login';
 import Notes from './Screens/Notes';
+import AllNotes from './Screens/AllNotes';
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' +
-    'Cmd+D or shake for dev menu',
-  android: 'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+const Stack = createNativeStackNavigator();
+
+function NotesNav() {
+  return (
+
+    <Stack.Navigator>
+      <Stack.Screen name="Notes" component={Notes} />
+      <Stack.Screen name="AllNotes" component={AllNotes} />
+    </Stack.Navigator>
+
+  )
+}
 
 const Tab = createBottomTabNavigator();
 
 export default function App({ navigation }) {
   return (
-    //<Provider store={store}>
+
     <NavigationContainer>
       <Tab.Navigator initialRouteName="Home" screenOptions={{
         tabBarHideOnKeyboard: true
@@ -72,9 +79,10 @@ export default function App({ navigation }) {
               )
             }
           }} />
-        <Tab.Screen name='Notes' component={Notes}
+        <Tab.Screen name='Notes' component={NotesNav}
           options={{
             tabBarActiveTintColor: "black",
+            headerShown: false,
 
             tabBarIcon: ({ size, focused, color }) => {
               return (
@@ -93,9 +101,11 @@ export default function App({ navigation }) {
             }
           }} />
 
+
       </Tab.Navigator>
+
     </NavigationContainer>
-    //</Provider>
+
   );
 
 }
