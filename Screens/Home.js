@@ -48,8 +48,6 @@ const Home = ({ navigation }) => {
 
       const data = await response.json();
       return data
-
-
     }
     catch (error) {
       alert(error + "err")

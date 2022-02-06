@@ -79,7 +79,7 @@ export default function App({ navigation }) {
               )
             }
           }} />
-        <Tab.Screen name='Notes' component={NotesNav}
+        <Tab.Screen name='NotesNav' component={NotesNav}
           options={{
             tabBarActiveTintColor: "black",
             headerShown: false,

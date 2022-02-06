@@ -13,10 +13,16 @@ function Notes({ navigation }) {
         setTitle(() => {
             return (`Impact_Toronto_Sermon_${date}`)
         })
+        return () => {
+            setTitle(() => {
+                ""
+            })
+        }
     }, [])
 
     function convertTitle() {
-        return title.replaceAll(" ", "_")
+        let t = title.replace(/ /g, "_")
+        return t
     }
 
 
@@ -24,6 +30,7 @@ function Notes({ navigation }) {
         let finalTitle = convertTitle();
         const newFileDir = `${fileURI}Notes/${finalTitle}.txt`
         FileSystem.writeAsStringAsync(newFileDir, textContent);
+        navigation.navigate("AllNotes")
     }
 
     //Checks for the Notes directory and then creates the dir if it does not exist
@@ -47,8 +54,6 @@ function Notes({ navigation }) {
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <SafeAreaView style={styles.container}>
-
-                <Text style={styles.header}>Sermon Notes</Text>
                 <View style={styles.createArea}>
                     <Text style={styles.makeNote}>Title</Text>
                     <TextInput placeholder={title} style={styles.noteInput} multiline={true} onChangeText={(text) => { setTitle(text) }} value={title}></TextInput>

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View, Alert } from "react-native";
 import * as FileSystem from "expo-file-system";
 
 
@@ -26,6 +26,31 @@ function AllNotes() {
         return (FileSystem.deleteAsync(`${fileURI}/${filePath}`))
     }
 
+    const createTwoButtonAlert = (filePath) =>
+        Alert.alert(
+            "Alert",
+            `Are you sure you want to delete ${filePath}`,
+            [
+                {
+                    text: "Cancel",
+                    onPress: () => { return },
+                    style: "cancel"
+                },
+                {
+                    text: "OK", onPress: () => {
+                        deleteSelectedFile(filePath)
+                        if (selectedFile === filePath) {
+                            setSelectedFile("")
+                            setText("")
+                        }
+                        else {
+                            return null;
+                        }
+                    }
+                }
+            ]
+        );
+
     return (
         <SafeAreaView style={styles.container}>
             {/* <TextInput value={fileURI} multiline={true}></TextInput>*/}
@@ -35,13 +60,13 @@ function AllNotes() {
                         return (
                             <View key={idx} style={styles.dirListContainer}>
                                 <Text style={styles.dirList}>
-                                    {`${idx + 1}.${el}`}
+                                    {`${idx + 1}. ${el}`}
                                 </Text>
                                 <View style={styles.options}>
                                     <Pressable onPress={() => { openSelectedFile(el).then((res) => { setText(res); setSelectedFile(el) }) }}>
-                                        <Text style={{ height: 20, backgroundColor: "white", color: '#4F6D7A', fontSize: 18 }}>Open</Text>
+                                        <Text style={{ height: 22, backgroundColor: "white", color: '#4F6D7A', fontSize: 18 }}>Open</Text>
                                     </Pressable>
-                                    <Pressable onPress={() => { deleteSelectedFile(el).then((res) => { setText(res); setSelectedFile(el) }) }}>
+                                    <Pressable onPress={() => { createTwoButtonAlert(el) }}>
                                         <Text style={{ height: 20, backgroundColor: "white", color: 'red', fontSize: 18 }}>Delete</Text>
                                     </Pressable>
                                 </View>
@@ -50,10 +75,14 @@ function AllNotes() {
                     })}
                 </ScrollView>
             </View>
+
             <View style={styles.textViewBackGround}>
-                <Text style={{ textAlign: 'center', marginTop: 15, color: "black", fontWeight: '800' }}>{selectedFile}</Text>
-                <Text style={styles.textView}>{text}</Text>
+                <ScrollView>
+                    <Text style={{ textAlign: 'center', marginTop: 15, color: "black", fontWeight: '800' }}>{selectedFile}</Text>
+                    <Text style={styles.textView}>{text}</Text>
+                </ScrollView>
             </View>
+
 
 
         </SafeAreaView>
@@ -93,7 +122,8 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: 'space-evenly',
         alignItems: 'center',
-        height: 20
+        height: 30
+
     }
 })
 
