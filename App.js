@@ -1,13 +1,5 @@
 import React, { Component } from 'react';
-import {
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-  StatusBar,
-  Button,
-  Image
-} from 'react-native';
+import { StyleSheet } from 'react-native';
 import { registerRootComponent } from 'expo';
 import { NavigationContainer } from "@react-navigation/native"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
@@ -17,17 +9,16 @@ import Home from "./Screens/Home";
 import About from "./Screens/About"
 import Give from "./Screens/Give"
 
-import { Header } from "react-native-elements"
 import 'react-native-gesture-handler';
 import { Entypo } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-import NotificationSystem from './NotificationHandler/Notification';
 import Login from './Screens/Login';
 import Notes from './Screens/Notes';
 import AllNotes from './Screens/AllNotes';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -70,6 +61,7 @@ export default function App({ navigation }) {
               )
             }
           }} />
+        {/* 
         <Tab.Screen name='Give' component={Give}
           options={{
             tabBarActiveTintColor: "black",
@@ -79,6 +71,7 @@ export default function App({ navigation }) {
               )
             }
           }} />
+          */}
         <Tab.Screen name='NotesNav' component={NotesNav}
           options={{
             tabBarActiveTintColor: "black",

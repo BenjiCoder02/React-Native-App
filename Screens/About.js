@@ -4,26 +4,30 @@ import {
   Text,
   View,
   StatusBar,
-  ImageBackground
 } from 'react-native';
 import { DataTable } from "react-native-paper";
 import axios from "axios"
+import AnimatedLoader from "react-native-animated-loader";
+import { eventsAPI } from "../Constants/API";
 
 
 const About = ({ navigation }) => {
   const [events, setEvents] = useState([])
+  const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
     const getSrc = () => {
-      axios.get("https://impact-toronto-react-native.herokuapp.com/rest/v1/events")
+      axios.get(eventsAPI)
         .then((res) => {
           const data = res.data;
 
           setEvents(data)
+          setIsLoaded(true)
 
           return data
         })
         .catch((error) => {
+          setIsLoaded(false)
           alert(error + "err")
         }
         )
@@ -31,6 +35,24 @@ const About = ({ navigation }) => {
 
     getSrc()
   }, [])
+
+  const hourConverter = (hour) => {
+    let hourInt = parseInt(hour)
+    let adjustedHour = hourInt - 12
+
+    return (hourInt > 12 ? adjustedHour : hour)
+  }
+
+  const AM_PMConverter = (hour) => {
+    let hourInt = parseInt(hour)
+    if (hourInt > 11) {
+      return "PM"
+    }
+    else if ((hourInt === 0 || 24) || (hourInt < 11)) {
+      return "AM"
+    }
+  }
+
 
   return (
     <>
@@ -41,34 +63,47 @@ const About = ({ navigation }) => {
 
         />
         <View style={styles.top}>
-          <ImageBackground style={styles.background} source={require("../assets/image-asset.jpeg")} resizeMode={'cover'}>
-            <Text style={{ textAlign: "center", color: 'white', fontSize: 35, fontWeight: '900' }}>SERVICES</Text>
-          </ImageBackground>
+
+          <Text style={{ textAlign: "center", color: 'white', fontSize: 35, fontWeight: '900' }}>SERVICES</Text>
+
         </View>
 
-        <View style={styles.events}>
+        {!isLoaded ? <>
+          <AnimatedLoader visible={true}
+            overlayColor="none"
+            source={require("../assets/loader.json")}
+            animationStyle={{ height: 100, width: 100 }}
+            speed={1}
+            loop={true}
+          />
+        </>
+          :
 
-          <DataTable>
-            <DataTable.Header>
-              <DataTable.Title><Text style={{ color: "white", fontWeight: "600" }}>Day</Text></DataTable.Title>
-              <DataTable.Title><Text style={{ color: "white", fontWeight: "600" }}>Time</Text></DataTable.Title>
-              <DataTable.Title><Text style={{ color: "white", fontWeight: "600" }}>Event</Text></DataTable.Title>
-            </DataTable.Header>
-            {events.map((el, idx) => {
-              return (
-                <>
-                  <DataTable.Row key={idx}>
-                    <DataTable.Cell><Text style={{ color: "white", fontWeight: "300" }}>{el.day}</Text></DataTable.Cell>
-                    <DataTable.Cell><Text style={{ color: "white", fontWeight: "300" }}>{el.timeOfEvent}</Text></DataTable.Cell>
-                    <DataTable.Cell><Text style={{ color: "white", fontWeight: "300" }}>{el.eventName}</Text></DataTable.Cell>
-                  </DataTable.Row>
 
-                </>
+          <View style={styles.events}>
 
-              )
-            })}
-          </DataTable>
-        </View>
+            <DataTable>
+              <DataTable.Header>
+                <DataTable.Title><Text style={{ color: "white", fontWeight: "600" }}>Day</Text></DataTable.Title>
+                <DataTable.Title><Text style={{ color: "white", fontWeight: "600" }}>Time</Text></DataTable.Title>
+                <DataTable.Title><Text style={{ color: "white", fontWeight: "600" }}>Event</Text></DataTable.Title>
+              </DataTable.Header>
+              {events.map((el, idx) => {
+                return (
+                  <>
+                    <DataTable.Row>
+                      <DataTable.Cell><Text style={{ color: "white", fontWeight: "300" }}>{el.day}</Text></DataTable.Cell>
+                      <DataTable.Cell><Text style={{ color: "white", fontWeight: "300" }}>{hourConverter(el.hourOfEvent) + " : " + el.minuteOfEvent + " " + AM_PMConverter(el.hourOfEvent)}</Text></DataTable.Cell>
+                      <DataTable.Cell><Text style={{ color: "white", fontWeight: "300" }}>{el.eventName}</Text></DataTable.Cell>
+                    </DataTable.Row>
+
+                  </>
+
+                )
+              })}
+            </DataTable>
+          </View>
+        }
       </View>
 
     </>
@@ -93,7 +128,7 @@ const styles = StyleSheet.create({
     fontSize: 25
   },
   top: {
-
+    justifyContent: "center",
     height: 100,
     width: "100%"
   },

@@ -1,27 +1,36 @@
 import { NavigationContainer } from "@react-navigation/native";
 import React, { Component, useCallback, useEffect, useState } from "react";
 import {
-  Platform,
   StyleSheet,
   Text,
   View,
-  StatusBar,
-  Button,
   Image,
   Pressable,
   SafeAreaView,
   ScrollView,
-  FlatList,
   Alert
 } from 'react-native';
 import * as Linking from "expo-linking";
 import YoutubePlayer from "react-native-youtube-iframe";
+import AnimatedLoader from "react-native-animated-loader"
+import { homeAPI, notificationsAPI, registerPushToken, youtubeLink } from "../Constants/API";
+import * as Notifications from "expo-notifications"
+
+import { registerForPushNotificationsAsync } from "../NotificationHandler/Notification";
+import axios from "axios";
 
 const Home = ({ navigation }) => {
   const [src, setVideoSrc] = useState([])
-
+  const [isLoaded, setIsLoaded] = useState(false)
   const [playing, setPlaying] = useState(false);
 
+  const registerForNotifications = () => {
+
+    registerForPushNotificationsAsync().then(token =>
+      axios.post(registerPushToken, { token: token })
+
+    );
+  }
 
   const onStateChange = useCallback((state) => {
     if (state === 'ended') {
@@ -35,7 +44,7 @@ const Home = ({ navigation }) => {
   }, [])
 
   const handlePress = () => {
-    Linking.openURL("https://www.youtube.com/c/ImpactChurchTO/featured")
+    Linking.openURL(youtubeLink)
   }
 
   const handleLogin = () => {
@@ -44,9 +53,14 @@ const Home = ({ navigation }) => {
 
   const getSrc = async () => {
     try {
-      const response = await fetch("https://impact-toronto-react-native.herokuapp.com/home");
+      const response = await fetch(homeAPI);
+      //setInterval(() => {
+      fetch(notificationsAPI)
+      // }, 60000)
+
 
       const data = await response.json();
+      setIsLoaded(true)
       return data
     }
     catch (error) {
@@ -55,6 +69,7 @@ const Home = ({ navigation }) => {
   }
 
   useEffect(() => {
+    registerForNotifications()
     getSrc().then((res) => {
       let arr = res.items;
       arr.map(ele => {
@@ -68,36 +83,52 @@ const Home = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.imageView}>
-        <Image source={require("../assets/impact_church_logo.png")} style={styles.logo} />
-        <Pressable onPress={handleLogin}>
-          <View style={styles.login}><Text style={{ color: 'white', fontWeight: '700' }}>Login</Text></View>
-        </Pressable>
-      </View>
-      <ScrollView style={{ paddingHorizontal: "10%" }}>
+      {!isLoaded ?
+        <AnimatedLoader visible={true}
+          overlayColor="none"
+          source={require("../assets/loader.json")}
+          animationStyle={{ height: 100, width: 100 }}
+          speed={1}
+          loop={true}
+        />
 
-        <Image source={require("../assets/love_god_love_people.jpg")} style={styles.image} />
-
-        <Pressable onPress={handlePress} style={styles.Pressable}>
-          <Image source={require("../assets/Service_Link.png")} style={styles.image} />
-        </Pressable>
-
-
-        {src.map((ele, idx) => {
-          return (
-            <View style={{ marginVertical: 20 }} key={idx}>
-              <YoutubePlayer height={200} width={'auto'}
-                play={playing}
-                videoId={ele}
-                onChangeState={onStateChange}
-              />
-            </View>
-          )
-
-        })}
+        :
+        <>
+          <View style={styles.imageView}>
+            <Image source={require("../assets/impact_church_logo.png")} style={styles.logo} />
+            <Pressable onPress={handleLogin}>
+              <View style={styles.login}><Text style={{ color: 'white', fontWeight: '700' }}>Login</Text></View>
+            </Pressable>
+          </View>
 
 
-      </ScrollView >
+          <ScrollView style={{ paddingHorizontal: "10%" }}>
+
+            <Image source={require("../assets/love_god_love_people.jpg")} style={styles.image} />
+
+            <Pressable onPress={handlePress} style={styles.Pressable}>
+              <Image source={require("../assets/Service_Link.png")} style={styles.image} />
+            </Pressable>
+
+
+            {src.map((ele, idx) => {
+              return (
+                <View style={{ marginVertical: 20 }} key={idx}>
+                  <YoutubePlayer height={200} width={335}
+                    play={playing}
+                    videoId={ele}
+                    onChangeState={onStateChange}
+                  />
+                </View>
+              )
+
+            })}
+
+
+          </ScrollView >
+        </>
+
+      }
     </SafeAreaView >
   )
 }

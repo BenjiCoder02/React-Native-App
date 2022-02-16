@@ -77,7 +77,7 @@ async function schedulePushNotification() {
     });
 }
 
-async function registerForPushNotificationsAsync() {
+export async function registerForPushNotificationsAsync() {
     let token;
     if (Constants.isDevice) {
         const { status: existingStatus } = await Notifications.getPermissionsAsync();
@@ -91,7 +91,7 @@ async function registerForPushNotificationsAsync() {
             return;
         }
         token = (await Notifications.getExpoPushTokenAsync()).data;
-        console.log(token);
+
     } else {
         alert('Must use physical device for Push Notifications');
     }
