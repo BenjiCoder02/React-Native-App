@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { registerRootComponent } from 'expo';
 import { NavigationContainer } from "@react-navigation/native"
@@ -26,7 +26,7 @@ function NotesNav() {
   return (
 
     <Stack.Navigator>
-      <Stack.Screen name="Notes" component={Notes} />
+      <Stack.Screen name="NOTES" component={Notes} />
       <Stack.Screen name="AllNotes" component={AllNotes} />
     </Stack.Navigator>
 
@@ -36,6 +36,7 @@ function NotesNav() {
 const Tab = createBottomTabNavigator();
 
 export default function App({ navigation }) {
+
   return (
 
     <NavigationContainer>
@@ -43,8 +44,9 @@ export default function App({ navigation }) {
         tabBarHideOnKeyboard: true
       }}>
 
-        <Tab.Screen name='Home' component={Home}
+        <Tab.Screen name='Home' children={() => <Home />}
           options={{
+
             tabBarActiveTintColor: "black",
             tabBarIcon: ({ size, focused, color }) => {
               return (
@@ -53,6 +55,7 @@ export default function App({ navigation }) {
             }
           }} />
         <Tab.Screen name='About' component={About}
+
           options={{
             tabBarActiveTintColor: "black",
             tabBarIcon: ({ size, focused, color }) => {
@@ -72,7 +75,7 @@ export default function App({ navigation }) {
             }
           }} />
           */}
-        <Tab.Screen name='NotesNav' component={NotesNav}
+        <Tab.Screen name='Notes' component={NotesNav}
           options={{
             tabBarActiveTintColor: "black",
             headerShown: false,
@@ -84,7 +87,7 @@ export default function App({ navigation }) {
             }
           }} />
 
-        <Tab.Screen name="Login" component={Login}
+        {/* <Tab.Screen name="Login" component={Login}
           options={{
             tabBarActiveTintColor: "black",
             tabBarIcon: ({ size, focused, color }) => {
@@ -93,6 +96,7 @@ export default function App({ navigation }) {
               )
             }
           }} />
+          */}
 
 
       </Tab.Navigator>

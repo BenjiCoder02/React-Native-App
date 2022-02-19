@@ -1,8 +1,6 @@
-import { NavigationContainer } from "@react-navigation/native";
-import React, { Component, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   StyleSheet,
-  Text,
   View,
   Image,
   Pressable,
@@ -13,11 +11,11 @@ import {
 import * as Linking from "expo-linking";
 import YoutubePlayer from "react-native-youtube-iframe";
 import AnimatedLoader from "react-native-animated-loader"
-import { homeAPI, notificationsAPI, registerPushToken, youtubeLink } from "../Constants/API";
-import * as Notifications from "expo-notifications"
+import { homeAPI, registerPushToken, youtubeLink } from "../Constants/API";
 
 import { registerForPushNotificationsAsync } from "../NotificationHandler/Notification";
 import axios from "axios";
+
 
 const Home = ({ navigation }) => {
   const [src, setVideoSrc] = useState([])
@@ -30,6 +28,7 @@ const Home = ({ navigation }) => {
       axios.post(registerPushToken, { token: token })
 
     );
+
   }
 
   const onStateChange = useCallback((state) => {
@@ -51,34 +50,33 @@ const Home = ({ navigation }) => {
     navigation.navigate("Login")
   }
 
-  const getSrc = async () => {
-    try {
-      const response = await fetch(homeAPI);
-      //setInterval(() => {
-      fetch(notificationsAPI)
-      // }, 60000)
-
-
-      const data = await response.json();
-      setIsLoaded(true)
-      return data
-    }
-    catch (error) {
-      alert(error + "err")
-    }
-  }
-
-  useEffect(() => {
-    registerForNotifications()
-    getSrc().then((res) => {
-      let arr = res.items;
+  const getSrc = () => {
+    let data, arr;
+    axios.get(homeAPI).then(res => {
+      data = res.data;
+      arr = data.items;
       arr.map(ele => {
         setVideoSrc(prevState => {
           return [...prevState, ele.contentDetails.videoId]
         })
       })
-
     })
+      .catch(err => {
+        console.log(err)
+      })
+
+    setIsLoaded(true)
+    return data
+  }
+
+  useEffect(() => {
+
+    getSrc()
+    registerForNotifications();
+
+
+
+
   }, [])
 
   return (
@@ -96,9 +94,9 @@ const Home = ({ navigation }) => {
         <>
           <View style={styles.imageView}>
             <Image source={require("../assets/impact_church_logo.png")} style={styles.logo} />
-            <Pressable onPress={handleLogin}>
-              <View style={styles.login}><Text style={{ color: 'white', fontWeight: '700' }}>Login</Text></View>
-            </Pressable>
+            {/*<Pressable onPress={handleLogin}>
+                <View style={styles.login}><Text style={{ color: 'white', fontWeight: '700' }}>Login</Text></View>
+            </Pressable>*/}
           </View>
 
 
@@ -136,7 +134,7 @@ const Home = ({ navigation }) => {
 const styles = StyleSheet.create({
   imageView: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     height: '10%',
     width: 'auto'

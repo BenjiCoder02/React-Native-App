@@ -4,5 +4,5 @@ const APIDomainSelector = (mode !== "dev" ? "https://impact-toronto-react-native
 export const youtubeLink = "https://www.youtube.com/c/ImpactChurchTO/featured";
 export const homeAPI = `${APIDomainSelector}/home`
 export const eventsAPI = `${APIDomainSelector}/rest/v1/events`
-export const notificationsAPI = `${APIDomainSelector}/api/notifications`
 export const registerPushToken = `${APIDomainSelector}/rest/v1/register-push-token`
+export const verseOfTheDayAPI = `${APIDomainSelector}/rest/v1/verse`
